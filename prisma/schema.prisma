@@ -22,13 +22,17 @@ model User {
   bio            String?
   image          String?
   user_link_name String?
+  theme          String   @default("light")     // Default theme
+  socialPosition String   @default("top")       // Default position
   setup_complete Boolean  @default(false)
   createdAt      DateTime @default(now())
-  links Link[]
-  socialLinks SocialLink[]
+  links          Link[]
+  socialLinks    SocialLink[]
   pageViews      PageView[] 
-
 }
+
+
+
 
 model Link {
   id         String   @id @default(cuid())
