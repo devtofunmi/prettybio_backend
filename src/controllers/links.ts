@@ -10,9 +10,9 @@ export const getLinks = async (c: Context) => {
       select: {
         id: true,
         url: true,
-        title: true, // if you have a title or other fields
+        title: true, 
         clickCount: true,
-        createdAt: true, // optional, but helpful for UI
+        createdAt: true, 
       },
     });
   
@@ -20,7 +20,7 @@ export const getLinks = async (c: Context) => {
   };
 
   // Increment click count for a public link
-export const incrementLinkClick = async (c: Context) => {
+ export const incrementLinkClick = async (c: Context) => {
     const id = c.req.param("id");
   
     const link = await prisma.link.update({
