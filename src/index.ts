@@ -7,6 +7,7 @@ import socialRoutes from './routes/sociallinks.js'
 import { publicRoutes as linkPublicRoutes } from './routes/links.js'; 
 import { publicRoutes as socialPublicRoutes } from './routes/sociallinks.js'; 
 import { analyticsRoutes } from './routes/analytics.js'
+import { preferencesRoutes } from './routes/userpreference.js' 
 
 const app = new Hono()
 
@@ -17,7 +18,10 @@ app.route("/auth", authRoutes);
 app.route("/account", accountRoutes);
 app.route("/links", linkRoutes);
 app.route("/sociallinks", socialRoutes);
-app.route('/analytics', analyticsRoutes)
+app.route('/analytics', analyticsRoutes);
+app.route('/preferences', preferencesRoutes)
+
+
 
 // Public click tracking routes (no auth)
 app.route('/public', linkPublicRoutes);
