@@ -5,7 +5,7 @@ import {
   updateSocialLink,
   deleteSocialLink,
   incrementSocialClick,
-} from "../controllers/sociallink.js";
+} from "../controllers/sociallinks.js";
 import { authMiddleware } from "../middleware/authmiddleware.js";
 
 const socialRoutes = new Hono();
