@@ -3,8 +3,10 @@ import { Hono } from 'hono'
 import authRoutes from './routes/auth.js'
 import { accountRoutes } from './routes/account.js'
 import linkRoutes from './routes/links.js'
+import socialRoutes from './routes/sociallinks.js'
 import { publicRoutes as linkPublicRoutes } from './routes/links.js'; 
 import { publicRoutes as socialPublicRoutes } from './routes/sociallinks.js'; 
+import { analyticsRoutes } from './routes/analytics.js'
 
 const app = new Hono()
 
@@ -14,10 +16,13 @@ app.get('/', (c) => {
 app.route("/auth", authRoutes);
 app.route("/account", accountRoutes);
 app.route("/links", linkRoutes);
+app.route("/sociallinks", socialRoutes);
+app.route('/analytics', analyticsRoutes)
 
 // Public click tracking routes (no auth)
 app.route('/public', linkPublicRoutes);
 app.route('/public', socialPublicRoutes);
+
 
 serve({
   fetch: app.fetch,
