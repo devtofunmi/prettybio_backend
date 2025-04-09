@@ -25,6 +25,8 @@ model User {
   setup_complete Boolean  @default(false)
   createdAt      DateTime @default(now())
   links Link[]
+  socialLinks SocialLink[]
+  pageViews      PageView[] 
 
 }
 
@@ -47,6 +49,14 @@ model SocialLink {
   userId     String
   user       User     @relation(fields: [userId], references: [id])
   createdAt  DateTime @default(now())
+}
+
+model PageView {
+  id        String   @id @default(cuid())
+  date      DateTime @default(now())
+  views     Int      @default(1)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
 }
 
 
