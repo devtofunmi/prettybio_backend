@@ -1,6 +1,5 @@
-// routes/preferences.ts
 import { Hono } from 'hono'
-import { getUserPreferences, updateUserPreferences } from '../controllers/userpreference.js' // adjust path if needed
+import { getUserPreferences, updateUserPreferences } from '../controllers/userpreference.js'
 
 export const preferencesRoutes = new Hono()
 
