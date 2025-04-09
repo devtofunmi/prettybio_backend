@@ -1,4 +1,3 @@
-// routes/analytics.ts
 import { Hono } from 'hono';
 import { getLinkAnalytics, getSocialLinkAnalytics, getPageViews } from '../controllers/analytics.js';
 
