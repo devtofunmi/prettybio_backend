@@ -1,9 +1,9 @@
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import type { Context } from "hono";
+import { prisma } from "../lib/prisma.js";
 
 // Fetch user preferences (including theme and social position)
-export const getUserPreferences = async (userId: string) => {
+export const getUserPreferences = async (c: Context) => {
+  const userId = c.get("userId");
   try {
     const user = await prisma.user.findUnique({
       where: { id: userId },
@@ -19,6 +19,7 @@ export const getUserPreferences = async (userId: string) => {
     throw new Error('Error fetching user preferences');
   }
 };
+
 
 // Update user preferences (theme and social position)
 export const updateUserPreferences = async (userId: string, theme: string, socialPosition: string) => {
