@@ -1,5 +1,6 @@
+// routes/preferences.ts
 import { Hono } from 'hono'
-import { getUserPreferences, updateUserPreferences } from '../controllers/userpreference.js'
+import { getUserPreferences, updateUserPreferences } from '../controllers/userpreference.js' // adjust path if needed
 
 export const preferencesRoutes = new Hono()
 
@@ -7,7 +8,7 @@ export const preferencesRoutes = new Hono()
 preferencesRoutes.get('/:userId', async (c) => {
   const userId = c.req.param('userId')
   try {
-    const prefs = await getUserPreferences(userId)
+    const prefs = await getUserPreferences(c)
     return c.json(prefs)
   } catch (error) {
     return c.json({ error: (error instanceof Error ? error.message : 'Unknown error') }, 500)
