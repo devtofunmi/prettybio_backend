@@ -24,8 +24,8 @@ app.route('/preferences', preferencesRoutes)
 
 
 // Public click tracking routes (no auth)
-app.route('/public', linkPublicRoutes);
-app.route('/public', socialPublicRoutes);
+app.route('/public/links', linkPublicRoutes);
+app.route('/public/sociallinks', socialPublicRoutes);
 
 
 serve({
