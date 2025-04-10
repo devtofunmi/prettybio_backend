@@ -42,37 +42,26 @@ export const signup = async (c: Context) => {
     }
   };
   
-// Login function to authenticate user and generate tokens
 export const login = async (c: Context) => {
   const { username, password } = await c.req.json();
 
-  if (!username || !password) {
-    return c.json({ error: "Username and password are required" }, 400);
-  }
-
   const user = await prisma.user.findUnique({ where: { username } });
+  if (!user) return c.json({ error: 'User not found' }, 404);
 
-  if (!user) {
-    return c.json({ error: "User not found" }, 404);
-  }
+  const valid = await bcrypt.compare(password, user.password);
+  if (!valid) return c.json({ error: 'Invalid credentials' }, 401);
 
-  // Compare the password provided with the hashed password in the database
-  const validPassword = await bcrypt.compare(password, user.password);
-  if (!validPassword) {
-    return c.json({ error: "Invalid credentials" }, 401);
-  }
-
-  // Generate access token and refresh token
   const accessToken = await signAccessToken({ sub: user.id });
   const refreshToken = await signRefreshToken({ sub: user.id });
 
-  // Set the refresh token in a cookie
-  c.header("Set-Cookie", `refresh_token=${refreshToken}; HttpOnly; Path=/; Max-Age=604800`);
+  c.header(
+    'Set-Cookie',
+    `refresh_token=${refreshToken}; HttpOnly; Path=/; Max-Age=604800`
+  );
 
-  // Return the generated access token and a success message
-  return c.json({ accessToken, message: "Login successful" });
+  return c.json({ accessToken, userId: user.id, message: 'Login successful' });
 };
-  
+
 
   export const setup = async (c: Context) => {
     try {
