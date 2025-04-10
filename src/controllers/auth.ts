@@ -58,8 +58,10 @@ export const signup = async (c: Context) => {
       `refresh_token=${refreshToken}; HttpOnly; Path=/; Max-Age=604800`
     );
   
-    return c.json({ accessToken, message: "Login successful" });
+    // Include userId in the response
+    return c.json({ accessToken, userId: user.id, message: "Login successful" });
   };
+  
 
   export const setup = async (c: Context) => {
     try {
