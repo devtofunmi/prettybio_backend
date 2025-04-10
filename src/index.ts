@@ -1,5 +1,6 @@
 import { serve } from '@hono/node-server'
 import { Hono } from 'hono'
+import { cors } from 'hono/cors'
 import authRoutes from './routes/auth.js'
 import { accountRoutes } from './routes/account.js'
 import linkRoutes from './routes/links.js'
@@ -10,6 +11,11 @@ import { analyticsRoutes } from './routes/analytics.js'
 import { preferencesRoutes } from './routes/userpreference.js' 
 
 const app = new Hono()
+
+// Enable CORS for all routes
+app.use(cors({ 
+  origin: '*' 
+}));
 
 app.get('/', (c) => {
   return c.text('Hello Hono!')
