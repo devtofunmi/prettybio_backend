@@ -59,23 +59,23 @@ export const signup = async (c: Context) => {
       return c.json({ error: "Invalid credentials" }, 401);
     }
   
-    // ✅ Generate tokens using user.id as `sub`
+    // ✅ Generate tokens
     const accessToken = await signAccessToken({ sub: user.id });
     const refreshToken = await signRefreshToken({ sub: user.id });
   
-    // ✅ Set refresh token in HTTP-only cookie
+    // ✅ Set refresh token as HTTP-only cookie
     c.header(
       "Set-Cookie",
       `refresh_token=${refreshToken}; HttpOnly; Path=/; Max-Age=604800; Secure; SameSite=Strict`
     );
   
-    // ✅ Return accessToken + userId + success message
+    // ✅ Return only access token
     return c.json({
       accessToken,
-      userId: user.id,
       message: "Login successful",
     });
   };
+  
 
 
   export const setup = async (c: Context) => {
