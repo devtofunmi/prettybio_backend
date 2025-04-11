@@ -8,6 +8,6 @@ authRoutes.post("/signup", signup);
 authRoutes.post("/login", login);
 authRoutes.post("/refreshToken", refreshToken);
 authRoutes.post("/logout", logout);
-authRoutes.post("/setup", authMiddleware, setup);
+authRoutes.patch("/setup", authMiddleware, setup);
 
 export default authRoutes;
