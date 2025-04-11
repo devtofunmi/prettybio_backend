@@ -30,16 +30,19 @@ export async function signRefreshToken(payload: any) {
   }
 }
 
-export async function verifyToken(token: string) {
+export const verifyToken = async (token: string) => {
   try {
+    console.log("Incoming token:", token);
+    console.log("JWT Secret:", process.env.JWT_SECRET);
+
     const { payload } = await jwtVerify(token, secret);
     return payload;
   } catch (err) {
-    // Error handling, can log or throw a specific error based on the type
-    if (err instanceof Error && err.message.includes("jwt expired")) {
-      throw new Error("Token has expired.");
-    }
+    console.error("JWT verification failed:", err);
     throw new Error("Invalid token or error verifying the token.");
   }
-}
+};
+
+
+
 
