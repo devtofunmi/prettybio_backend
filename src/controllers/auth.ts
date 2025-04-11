@@ -87,16 +87,10 @@ export const signup = async (c: Context) => {
       }
   
       const token = authHeader.split(" ")[1];
-      const payload = await verifyToken(token).catch(() =>
-        c.json({ error: "Invalid token" }, 401)
-      );
-
-      if (!payload || typeof payload !== "object" || !("sub" in payload)) {
-        return c.json({ error: "Invalid token payload" }, 401);
-      }
+      const payload = await verifyToken(token); // No need to check again, we are sure it will be valid or throw an error
   
-      // Use the decoded payload to get the userId
-      const userId = payload.sub;
+      // Destructure the userId from the payload
+      const userId = payload.sub; // TypeScript will now recognize this as being valid
   
       // Validate the incoming request body
       const { name, bio, image, user_link_name } = await c.req.json();
@@ -122,9 +116,11 @@ export const signup = async (c: Context) => {
       });
     } catch (err) {
       console.error("Setup Error:", err);
-      return c.json({ error: "Internal server error" }, 500);
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      return c.json({ error: `Internal server error: ${errorMessage}` }, 500);
     }
   };
+  
 
   export const refreshToken = async (c: Context) => {
     const cookies = c.req.header("cookie");
