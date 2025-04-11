@@ -5,7 +5,7 @@ import { authMiddleware } from "../middleware/authmiddleware.js";
 export const accountRoutes = new Hono();
 
 // The routes are now consistent with "/account" path
-accountRoutes.get("/", authMiddleware, getAccount);  // GET /account
+accountRoutes.get("/",  getAccount);  // GET /account
 accountRoutes.put("/", authMiddleware, updateAccount);  // PUT /account
 
 
