@@ -80,13 +80,31 @@ export const signup = async (c: Context) => {
 
   export const setup = async (c: Context) => {
     try {
-      const userId = c.get("userId");
-      const { name, bio, image, user_link_name } = await c.req.json();
+      // Extract token from Authorization header
+      const authHeader = c.req.header("Authorization");
+      if (!authHeader || !authHeader.startsWith("Bearer ")) {
+        return c.json({ error: "Unauthorized" }, 401);
+      }
   
+      const token = authHeader.split(" ")[1];
+      const payload = await verifyToken(token).catch(() =>
+        c.json({ error: "Invalid token" }, 401)
+      );
+
+      if (!payload || typeof payload !== "object" || !("sub" in payload)) {
+        return c.json({ error: "Invalid token payload" }, 401);
+      }
+  
+      // Use the decoded payload to get the userId
+      const userId = payload.sub;
+  
+      // Validate the incoming request body
+      const { name, bio, image, user_link_name } = await c.req.json();
       if (!name || !bio || !image || !user_link_name) {
         return c.json({ error: "All fields are required" }, 400);
       }
   
+      // Update user information in the database
       const updatedUser = await prisma.user.update({
         where: { id: userId },
         data: {
@@ -94,11 +112,14 @@ export const signup = async (c: Context) => {
           bio,
           image,
           user_link_name,
-          setup_complete: true
-        }
+          setup_complete: true,
+        },
       });
   
-      return c.json({ message: "Profile setup complete", user: { id: updatedUser.id, name: updatedUser.name } });
+      return c.json({
+        message: "Profile setup complete",
+        user: { id: updatedUser.id, name: updatedUser.name },
+      });
     } catch (err) {
       console.error("Setup Error:", err);
       return c.json({ error: "Internal server error" }, 500);
