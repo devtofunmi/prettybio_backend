@@ -12,7 +12,7 @@ export const getAccount = async (c: Context) => {
       name: true,
       bio: true,
       image: true,
-      user_link_name: true,
+      userLinkName: true,
       setup_complete: true,
       createdAt: true,
     },
@@ -27,7 +27,7 @@ export const getAccount = async (c: Context) => {
 
 export const updateAccount = async (c: Context) => {
   const userId = c.get("userId");
-  const { name, bio, image, user_link_name } = await c.req.json();
+  const { name, bio, image, userLinkName } = await c.req.json();
 
   try {
     const updatedUser = await prisma.user.update({
@@ -36,7 +36,7 @@ export const updateAccount = async (c: Context) => {
         name,
         bio,
         image,
-        user_link_name,
+        userLinkName,
         setup_complete: true,
       },
     });
@@ -49,7 +49,7 @@ export const updateAccount = async (c: Context) => {
         name: updatedUser.name,
         bio: updatedUser.bio,
         image: updatedUser.image,
-        user_link_name: updatedUser.user_link_name,
+        userLinkName: updatedUser.userLinkName,
       },
     });
   } catch (err) {
