@@ -8,6 +8,7 @@ import {
 } from "../controllers/links.js";
 import { authMiddleware } from "../middleware/authmiddleware.js";
 
+
 const linkRoutes = new Hono();
 linkRoutes.use("/*", authMiddleware);
 
