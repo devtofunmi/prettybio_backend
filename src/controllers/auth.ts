@@ -95,9 +95,9 @@ export const signup = async (c: Context) => {
   
       const userId = payload.sub as string;
   
-      const { name, bio, image, user_link_name } = await c.req.json();
+      const { name, bio, image, userLinkName } = await c.req.json();
   
-      if (!name || !bio || !image || !user_link_name) {
+      if (!name || !bio || !image || !userLinkName) {
         return c.json({ error: "All fields are required" }, 400);
       }
   
@@ -107,7 +107,7 @@ export const signup = async (c: Context) => {
           name,
           bio,
           image,
-          user_link_name,
+          userLinkName,
           setup_complete: true,
         },
       });
