@@ -22,8 +22,8 @@ app.get('/', (c) => {
 })
 app.route("/auth", authRoutes);
 app.route("/account", accountRoutes);
-app.route("/links", linkRoutes);
-app.route("/sociallinks", socialRoutes);
+app.route("/", linkRoutes);
+app.route("/", socialRoutes);
 app.route('/analytics', analyticsRoutes);
 app.route('/preferences', preferencesRoutes)
 
