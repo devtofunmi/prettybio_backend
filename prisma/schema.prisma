@@ -21,7 +21,7 @@ model User {
   name           String?
   bio            String?
   image          String?
-  user_link_name String?
+  userLinkName String?
   theme          String   @default("light")     // Default theme
   socialPosition String   @default("top")       // Default position
   setup_complete Boolean  @default(false)
