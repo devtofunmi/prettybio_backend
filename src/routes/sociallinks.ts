@@ -23,7 +23,7 @@ const publicRoutes = new Hono();
 publicRoutes.get("/click/:id", incrementSocialClick);
 
 export default new Hono()
-  .route("/socials", socialRoutes)
+  .route("/sociallinks", socialRoutes)
   .route("/public", publicRoutes); // mount public route
   // At the end of routes/links.ts
    export { publicRoutes };
