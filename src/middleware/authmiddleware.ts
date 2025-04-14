@@ -15,6 +15,10 @@ export const authMiddleware: MiddlewareHandler = async (c, next) => {
   if (process.env.NODE_ENV !== "production") {
     console.log("Token received:", token);
   }
+  if (!token || token.split(".").length !== 3) {
+    console.error("Malformed or missing JWT:", token);
+    return c.json({ error: "Invalid token format" }, 401);
+  }
 
   try {
     const payload = await verifyToken(token);
