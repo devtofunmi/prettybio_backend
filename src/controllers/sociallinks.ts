@@ -5,7 +5,7 @@ import { prisma } from "../lib/prisma.js";
 export const getSocialLinks = async (c: Context) => {
     const userId = c.get("userId");
   
-    const links = await prisma.socialLink.findMany({
+    const socialLinks = await prisma.socialLink.findMany({
       where: { userId },
       select: {
         id: true,
@@ -14,7 +14,7 @@ export const getSocialLinks = async (c: Context) => {
       },
     });
   
-    return c.json({ links });
+    return c.json({ socialLinks });
   };
     
   // Create a new social link
@@ -24,14 +24,14 @@ export const getSocialLinks = async (c: Context) => {
   
     if (!url) return c.json({ error: "URL is required" }, 400);
   
-    const link = await prisma.socialLink.create({
+    const socialLinks = await prisma.socialLink.create({
       data: {
         url,
         userId,
       },
     });
   
-    return c.json({ message: "Social link created", link }, 201);
+    return c.json({ message: "Social link created", socialLinks }, 201);
   };
   
   // Update a social link
@@ -51,7 +51,7 @@ export const getSocialLinks = async (c: Context) => {
       data: { url },
     });
   
-    return c.json({ message: "Social link updated", link: updated });
+    return c.json({ message: "Social link updated", socialLinks: updated });
   };
   
   // Delete a social link
