@@ -3,42 +3,50 @@ import { prisma } from "../lib/prisma.js";
 
 // Get all social links for current user
 export const getSocialLinks = async (c: Context) => {
-    const userId = c.get("userId");
-  
-    const socialLinks = await prisma.socialLink.findMany({
-      where: { userId },
-      select: {
-        id: true,
-        url: true,
-        clickCount: true,
-      },
-    });
-  
-    return c.json({ socialLinks });
-  };
+  const userId = c.get("userId");
+
+  const socialLinks = await prisma.socialLink.findMany({
+    where: { userId },
+    select: {
+      id: true,
+      url: true,
+      clickCount: true,
+      platform: true,   // 👈 include this
+      username: true,   // 👈 include this
+    },
+  });
+
+  return c.json({ socialLinks });
+};
+
     
   // Create a new social link
   export const createSocialLink = async (c: Context) => {
     const userId = c.get("userId");
-    const { url } = await c.req.json();
+    const { url, platform, username } = await c.req.json();
   
-    if (!url) return c.json({ error: "URL is required" }, 400);
+    if (!url || !platform || !username) {
+      return c.json({ error: "URL, platform, and username are required" }, 400);
+    }
   
-    const socialLinks = await prisma.socialLink.create({
+    const newSocialLink = await prisma.socialLink.create({
       data: {
         url,
+        platform,
+        username,
         userId,
       },
     });
   
-    return c.json({ message: "Social link created", socialLinks }, 201);
+    return c.json({ message: "Social link created", socialLink: newSocialLink }, 201);
   };
+  
   
   // Update a social link
   export const updateSocialLink = async (c: Context) => {
     const userId = c.get("userId");
     const id = c.req.param("id");
-    const { url } = await c.req.json();
+    const { url, platform, username } = await c.req.json();
   
     const existing = await prisma.socialLink.findUnique({ where: { id } });
   
@@ -48,7 +56,7 @@ export const getSocialLinks = async (c: Context) => {
   
     const updated = await prisma.socialLink.update({
       where: { id },
-      data: { url },
+      data: { url, platform, username },
     });
   
     return c.json({ message: "Social link updated", socialLinks: updated });
