@@ -49,11 +49,13 @@ model Link {
 model SocialLink {
   id         String   @id @default(cuid())
   url        String
+  platform   String   
+  username   String   
   clickCount Int      @default(0)
-  userId     String
   user       User     @relation(fields: [userId], references: [id])
-  createdAt  DateTime @default(now())
+  userId     String
 }
+
 
 model PageView {
   id        String   @id @default(cuid())
