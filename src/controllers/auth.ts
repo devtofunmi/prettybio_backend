@@ -140,7 +140,8 @@ export const signup = async (c: Context) => {
   export const logout = async (c: Context) => {
     c.header(
       "Set-Cookie",
-      "refresh_token=; HttpOnly; Path=/; Max-Age=0"
+      "refresh_token=; HttpOnly; Path=/; Max-Age=0; Secure; SameSite=Strict"
     );
-    return c.json({ message: "Logged out" });
+    return c.json({ message: "Logged out successfully" });
   };
+  
