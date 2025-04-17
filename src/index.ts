@@ -13,9 +13,14 @@ import { preferencesRoutes } from './routes/userpreference.js'
 const app = new Hono()
 
 // Enable CORS for all routes
-app.use(cors({ 
-  origin: '*' 
+// app.use(cors({ 
+//   origin: '*' 
+// }));
+app.use(cors({
+  origin: 'http://localhost:3000', // Specify the exact origin you are making requests from
+  credentials: true,              // Allow cookies and authorization headers
 }));
+
 
 app.get('/', (c) => {
   return c.text('Hello Hono!')
