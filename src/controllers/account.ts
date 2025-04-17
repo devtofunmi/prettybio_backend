@@ -1,5 +1,6 @@
 import type { Context } from "hono";
 import { prisma } from "../lib/prisma.js";
+import bcrypt from "bcrypt";
 
 export const getAccount = async (c: Context) => {
   const userId = c.get("userId");
@@ -23,33 +24,39 @@ export const getAccount = async (c: Context) => {
   return c.json({ user });
 };
 
-
-
 export const updateAccount = async (c: Context) => {
   const userId = c.get("userId");
-  const { name, bio, image, userLinkName } = await c.req.json();
+  const { name, bio, image, userLinkName, password, username } = await c.req.json();
 
   try {
+    const dataToUpdate: any = {
+      name,
+      bio,
+      image,
+      userLinkName,
+      username,
+      setup_complete: true,
+    };
+
+    if (password) {
+      const hashedPassword = await bcrypt.hash(password, 10);
+      dataToUpdate.password = hashedPassword;
+    }
+
     const updatedUser = await prisma.user.update({
       where: { id: userId },
-      data: {
-        name,
-        bio,
-        image,
-        userLinkName,
-        setup_complete: true,
-      },
+      data: dataToUpdate,
     });
 
     return c.json({
       message: "Account updated successfully",
       user: {
         id: updatedUser.id,
-        username: updatedUser.username,
         name: updatedUser.name,
         bio: updatedUser.bio,
         image: updatedUser.image,
         userLinkName: updatedUser.userLinkName,
+        username: updatedUser.username,
       },
     });
   } catch (err) {
