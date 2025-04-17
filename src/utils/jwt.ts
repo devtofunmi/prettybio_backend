@@ -14,32 +14,29 @@ export interface JwtPayload {
   [key: string]: any;
 }
 
+//  Sign Access Token (short-lived)
 export async function signAccessToken(payload: JwtPayload): Promise<string> {
-  try {
-    return await new SignJWT(payload)
-      .setProtectedHeader({ alg: "HS256" })
-      .setExpirationTime(process.env.ACCESS_TOKEN_EXPIRY || "15m")
-      .sign(secret);
-  } catch (err) {
-    throw new Error("Error signing access token: " + (err instanceof Error ? err.message : "Unknown error"));
-  }
+  return await new SignJWT(payload)
+    .setProtectedHeader({ alg: "HS256" })
+    .setIssuedAt()
+    .setExpirationTime(process.env.ACCESS_TOKEN_EXPIRY || "15m") // default: 15 minutes
+    .sign(secret);
 }
 
+//  Sign Refresh Token (long-lived)
 export async function signRefreshToken(payload: JwtPayload): Promise<string> {
-  try {
-    return await new SignJWT(payload)
-      .setProtectedHeader({ alg: "HS256" })
-      .setExpirationTime(process.env.REFRESH_TOKEN_EXPIRY || "7d")
-      .sign(secret);
-  } catch (err) {
-    throw new Error("Error signing refresh token: " + (err instanceof Error ? err.message : "Unknown error"));
-  }
+  return await new SignJWT(payload)
+    .setProtectedHeader({ alg: "HS256" })
+    .setIssuedAt()
+    .setExpirationTime(process.env.REFRESH_TOKEN_EXPIRY || "7d") // default: 7 days
+    .sign(secret);
 }
 
+// 🔍 Verify Token
 export const verifyToken = async (token: string): Promise<JwtPayload> => {
   try {
     if (process.env.NODE_ENV !== "production") {
-      console.log("Verifying token:", token);
+      console.log(" Verifying token:", token);
     }
 
     const { payload } = await jwtVerify(token, secret);
@@ -50,7 +47,7 @@ export const verifyToken = async (token: string): Promise<JwtPayload> => {
       throw new Error("Token expired");
     }
 
-    console.error("JWT verification failed:", err);
+    console.error(" JWT verification failed:", err);
     throw new Error("Invalid token or error verifying the token.");
   }
 };
