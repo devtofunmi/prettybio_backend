@@ -125,23 +125,39 @@ export const signup = async (c: Context) => {
   
   
 
-  export const refreshToken = async (c: Context) => {
-    const cookies = c.req.header("cookie");
-    const token = cookies?.split("; ").find(cookie => cookie.startsWith("refresh_token="))?.split("=")[1];
-    if (!token) return c.json({ error: "No refresh token" }, 401);
-  
-    const payload = await verifyToken(token);
-    if (!payload || !payload.sub) return c.json({ error: "Invalid token" }, 403);
-  
-    const newAccessToken = await signAccessToken({ sub: payload.sub });
-    return c.json({ accessToken: newAccessToken });
-  };
+ // Helper to safely extract a cookie by name
+function getCookieValue(cookieHeader: string | undefined, name: string): string | null {
+  if (!cookieHeader) return null;
 
-  export const logout = async (c: Context) => {
-    c.header(
-      "Set-Cookie",
-      "refresh_token=; HttpOnly; Path=/; Max-Age=0; Secure; SameSite=Strict"
-    );
-    return c.json({ message: "Logged out successfully" });
-  };
+  const cookies = cookieHeader.split(";").map(cookie => cookie.trim());
+  const target = cookies.find(cookie => cookie.startsWith(`${name}=`));
+  return target ? decodeURIComponent(target.split("=")[1]) : null;
+}
+
+// 🔄 Refresh token handler
+export const refreshToken = async (c: Context) => {
+  const cookieHeader = c.req.header("cookie");
+  const token = getCookieValue(cookieHeader, "refresh_token");
+
+  if (!token) {
+    return c.json({ error: "No refresh token" }, 401);
+  }
+
+  const payload = await verifyToken(token);
+  if (!payload || !payload.sub) {
+    return c.json({ error: "Invalid or expired refresh token" }, 403);
+  }
+
+  const newAccessToken = await signAccessToken({ sub: payload.sub });
+
+  return c.json({ accessToken: newAccessToken });
+};
+
+export const logout = async (c: Context) => {
+  c.header(
+    "Set-Cookie",
+    "refresh_token=; HttpOnly; Path=/; Max-Age=0; Secure; SameSite=Strict"
+  );
+  return c.json({ message: "Logged out successfully" });
+};
   
