@@ -6,7 +6,7 @@ const authRoutes = new Hono();
 
 authRoutes.post("/signup", signup);
 authRoutes.post("/login", login);
-authRoutes.post("/refreshToken", refreshToken);
+authRoutes.post("/refresh-token", refreshToken);
 authRoutes.post("/logout", logout);
 authRoutes.patch("/setup", authMiddleware, setup);
 
