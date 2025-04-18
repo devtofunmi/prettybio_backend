@@ -60,17 +60,19 @@ export const signup = async (c: Context) => {
       return c.json({ error: "Invalid credentials" }, 401);
     }
   
-    // ✅ Generate tokens
+    // Generate tokens
     const accessToken = await signAccessToken({ sub: user.id });
     const refreshToken = await signRefreshToken({ sub: user.id });
   
-    // ✅ Set refresh token as HTTP-only cookie
+    // Set refresh token as HTTP-only cookie
     c.header(
       "Set-Cookie",
-      `refresh_token=${refreshToken}; HttpOnly; Path=/; Max-Age=604800; Secure; SameSite=Strict`
+      `refresh_token=${refreshToken}; Path=/; HttpOnly; ${
+        isProd ? "Secure; SameSite=None" : "SameSite=Lax"
+      }`
     );
   
-    // ✅ Return only access token
+    // Return only access token
     return c.json({
       accessToken,
       message: "Login successful",
@@ -136,6 +138,7 @@ export const refreshToken = async (c: Context) => {
     if (!payload.sub) return c.json({ error: "Invalid token" }, 403);
 
     const newAccessToken = await signAccessToken({ sub: payload.sub });
+    console.log("Incoming cookies:", c.req.header("cookie"));
     return c.json({ accessToken: newAccessToken });
   } catch (err) {
     return c.json({ error: "Token verification failed" }, 403);
