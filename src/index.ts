@@ -1,4 +1,3 @@
-import { serve } from '@hono/node-server'
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import authRoutes from './routes/auth.js'
@@ -9,6 +8,7 @@ import { publicRoutes as linkPublicRoutes } from './routes/links.js';
 import { publicRoutes as socialPublicRoutes } from './routes/sociallinks.js'; 
 import { analyticsRoutes } from './routes/analytics.js'
 import { preferencesRoutes } from './routes/userpreference.js' 
+import { serve } from '@hono/node-server'
 
 const app = new Hono()
 
@@ -16,19 +16,16 @@ const app = new Hono()
 // app.use(cors({ 
 //   origin: '*' 
 // }));
-app.use(
-  cors({
-    origin: (origin) => {
-      // Allow localhost during dev and Railway production domain
-      const allowedOrigins = [
-        'http://localhost:3000',
-        // 'https://prettybio.up.railway.app',
-      ];
-      return allowedOrigins.includes(origin ?? '') ? origin : '';
-    },
-    credentials: true, // allow cookies (important for refresh tokens)
-  })
-);
+
+app.use(cors({
+  origin: (origin) => {
+    const allowedOrigins = [
+      'http://localhost:3000',
+    ]
+    return allowedOrigins.includes(origin ?? '') ? origin : ''
+  },
+  credentials: true,
+}))
 
 
 app.get('/', (c) => {
@@ -48,13 +45,11 @@ app.route('/public/links', linkPublicRoutes);
 app.route('/public/sociallinks', socialPublicRoutes);
 
 
-serve(
-  {
-    fetch: app.fetch,
-    port: Number(process.env.PORT) || 3001,
-  },
-  (info) => {
-    console.log(`Server is running on http://localhost:${info.port}`);
-  }
-);
+const port = Number(process.env.PORT) || 3001
 
+serve({
+  fetch: app.fetch,
+  port,
+}, () => {
+  console.log(`Server is running on http://localhost:${port}`)
+})
