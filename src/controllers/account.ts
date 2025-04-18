@@ -64,3 +64,4 @@ export const updateAccount = async (c: Context) => {
     return c.json({ error: "Could not update account" }, 500);
   }
 };
+
