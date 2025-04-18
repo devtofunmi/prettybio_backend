@@ -137,14 +137,14 @@ function getCookieValue(cookieHeader: string | undefined, name: string): string 
 
 //  Refresh token handler
 export const refreshToken = async (c: Context) => {
-  const cookieHeader = c.req.header("cookie");
-  const token = cookieHeader?.split("; ").find(cookie => cookie.startsWith("refresh_token="))?.split("=")[1];
+  const cookie = c.req.header("cookie");
+  const token = cookie?.split("; ").find((c) => c.startsWith("refresh_token="))?.split("=")[1];
 
   if (!token) return c.json({ error: "No refresh token" }, 401);
 
   try {
     const payload = await verifyToken(token);
-    if (!payload?.sub) return c.json({ error: "Invalid token" }, 403);
+    if (!payload.sub) return c.json({ error: "Invalid token" }, 403);
 
     const newAccessToken = await signAccessToken({ sub: payload.sub });
     return c.json({ accessToken: newAccessToken });
