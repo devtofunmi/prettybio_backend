@@ -16,10 +16,19 @@ const app = new Hono()
 // app.use(cors({ 
 //   origin: '*' 
 // }));
-app.use(cors({
-  origin: 'http://localhost:3000', // Specify the exact origin you are making requests from
-  credentials: true,              // Allow cookies and authorization headers
-}));
+app.use(
+  cors({
+    origin: (origin) => {
+      // Allow localhost during dev and Railway production domain
+      const allowedOrigins = [
+        'http://localhost:3000',
+        'https://prettybio.up.railway.app',
+      ];
+      return allowedOrigins.includes(origin ?? '') ? origin : '';
+    },
+    credentials: true, // allow cookies (important for refresh tokens)
+  })
+);
 
 
 app.get('/', (c) => {
