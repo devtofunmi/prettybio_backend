@@ -78,7 +78,6 @@ export const signup = async (c: Context) => {
   };
   
 
-
   export const setup = async (c: Context) => {
     try {
       const authHeader = c.req.header("Authorization");
@@ -124,16 +123,6 @@ export const signup = async (c: Context) => {
     }
   };
   
-  
-
- // Helper to safely extract a cookie by name
-function getCookieValue(cookieHeader: string | undefined, name: string): string | null {
-  if (!cookieHeader) return null;
-
-  const cookies = cookieHeader.split(";").map(cookie => cookie.trim());
-  const target = cookies.find(cookie => cookie.startsWith(`${name}=`));
-  return target ? decodeURIComponent(target.split("=")[1]) : null;
-}
 
 //  Refresh token handler
 export const refreshToken = async (c: Context) => {
