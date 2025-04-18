@@ -21,10 +21,14 @@ app.use(cors({
   origin: (origin) => {
     const allowedOrigins = [
       'http://localhost:3000',
+      'https://prettybio.up.railway.app',
     ]
     return allowedOrigins.includes(origin ?? '') ? origin : ''
-  },
-  credentials: true,
+    
+  }
+  // credentials: true,
+
+  
 }))
 
 
