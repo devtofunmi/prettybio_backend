@@ -22,7 +22,7 @@ app.use(
       // Allow localhost during dev and Railway production domain
       const allowedOrigins = [
         'http://localhost:3000',
-        'https://prettybio.up.railway.app',
+        // 'https://prettybio.up.railway.app',
       ];
       return allowedOrigins.includes(origin ?? '') ? origin : '';
     },
