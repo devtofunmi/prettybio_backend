@@ -26,6 +26,7 @@ app.use(
       ]
       return allowedOrigins.includes(origin ?? '') ? origin : ''
     },
+    credentials: true
   })
 )
 
