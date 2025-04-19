@@ -13,24 +13,21 @@ import { serve } from '@hono/node-server'
 const app = new Hono()
 
 // Enable CORS for all routes
-app.use(cors({ 
-  origin: '*' 
-}));
+// app.use(cors({ 
+//   origin: '*' 
+// }));
 
-
-
-// app.use(cors({
-//   origin: (origin) => {
-//     const allowedOrigins = [
-//       'http://localhost:3000',
-//       'https://prettybio.up.railway.app',
-//     ]
-//     return allowedOrigins.includes(origin ?? '') ? origin : ''
-    
-//   }
-//   // credentials: true,
-  
-// }))
+app.use(
+  cors({
+    origin: (origin) => {
+      const allowedOrigins = [
+        'http://localhost:3000',
+        'https://prettybio.up.railway.app',
+      ]
+      return allowedOrigins.includes(origin ?? '') ? origin : ''
+    },
+  })
+)
 
 
 app.get('/', (c) => {
