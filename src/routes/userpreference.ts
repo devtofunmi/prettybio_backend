@@ -1,35 +1,17 @@
 // routes/preferences.ts
-import { Hono } from 'hono'
-import { getUserPreferences, updateUserPreferences } from '../controllers/userpreference.js' // adjust path if needed
+import { Hono } from 'hono';
+import { getUserPreferences, updateUserPreferences } from '../controllers/userpreference.js';
+import { authMiddleware } from '../middleware/authmiddleware.js';
 
-export const preferencesRoutes = new Hono()
+export const preferencesRoutes = new Hono();
 
-// GET /preferences/:userId
-preferencesRoutes.get('/:userId', async (c) => {
-  const userId = c.req.param('userId')
-  try {
-    const prefs = await getUserPreferences(c)
-    return c.json(prefs)
-  } catch (error) {
-    return c.json({ error: (error instanceof Error ? error.message : 'Unknown error') }, 500)
-  }
-})
+// Use middleware for all routes in this group
+preferencesRoutes.use('*', authMiddleware);
 
-// PUT /preferences/:userId
-preferencesRoutes.put('/:userId', async (c) => {
-  const userId = c.req.param('userId')
-  const body = await c.req.json()
-  const { theme, socialPosition } = body
+// GET /preferences
+preferencesRoutes.get('/', getUserPreferences);
 
-  if (!theme || !socialPosition) {
-    return c.json({ error: 'theme and socialPosition are required' }, 400)
-  }
+// PUT /preferences
+preferencesRoutes.put('/', updateUserPreferences);
 
-  try {
-    const updated = await updateUserPreferences(userId, theme, socialPosition)
-    return c.json(updated)
-  } catch (error) {
-    return c.json({ error: (error instanceof Error ? error.message : 'Unknown error') }, 500)
-  }
-})
 
