@@ -9,6 +9,7 @@ import { publicRoutes as socialPublicRoutes } from './routes/sociallinks.js';
 import { analyticsRoutes } from './routes/analytics.js'
 import { preferencesRoutes } from './routes/userpreference.js' 
 import { serve } from '@hono/node-server'
+import userRoutes from './routes/user.js'
 
 const app = new Hono()
 
@@ -39,7 +40,8 @@ app.route("/account", accountRoutes);
 app.route("/", linkRoutes);
 app.route("/", socialRoutes);
 app.route('/analytics', analyticsRoutes);
-app.route('/preferences', preferencesRoutes)
+app.route('/preferences', preferencesRoutes);
+app.route("/", userRoutes);
 
 
 
