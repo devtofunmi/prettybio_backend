@@ -21,6 +21,8 @@ export const getUserProfile = async (c: Context) => {
       username: user.name,
       bio: user.bio,
       image: user.image,
+      theme: user.theme,
+      socialPosition: user.socialPosition,
       links: user.links,
       socials: user.socialLinks,
     });
@@ -29,3 +31,4 @@ export const getUserProfile = async (c: Context) => {
     return c.json({ error: "Internal Server Error" }, 500);
   }
 };
+
