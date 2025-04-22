@@ -1,26 +1,43 @@
 import { Hono } from 'hono';
 import { getLinkAnalytics, getSocialLinkAnalytics, getPageViews } from '../controllers/analytics.js';
+import { verifyToken } from '../utils/jwt.js'; 
 
-export const analyticsRoutes = new Hono();
 
-// GET /analytics/links/:userId
-analyticsRoutes.get('/links/:userId', async (c) => {
-  const userId = c.req.param('userId');
+export const analyticsRoutes = new Hono<{ Variables: { userId: string } }>();
+
+analyticsRoutes.use(async (c, next) => {
+  const authHeader = c.req.header('Authorization');
+  const token = authHeader?.split(' ')[1];
+
+  if (!token) {
+    return c.json({ error: 'Unauthorized: No token provided' }, 401);
+  }
+
+  try {
+    const payload = await verifyToken(token); 
+    c.set('userId', payload.id); 
+    await next();
+  } catch (err) {
+    return c.json({ error: 'Unauthorized: Invalid token' }, 401);
+  }
+});
+
+analyticsRoutes.get('/links', async (c) => {
+  const userId = c.get('userId');
   const links = await getLinkAnalytics(userId);
   return c.json(links);
 });
 
-// GET /analytics/social-links/:userId
-analyticsRoutes.get('/social-links/:userId', async (c) => {
-  const userId = c.req.param('userId');
+
+analyticsRoutes.get('/social-links', async (c) => {
+  const userId = c.get('userId');
   const socialLinks = await getSocialLinkAnalytics(userId);
   return c.json(socialLinks);
 });
 
-// GET /analytics/page-views/:userId
-analyticsRoutes.get('/page-views/:userId', async (c) => {
-  const userId = c.req.param('userId');
+
+analyticsRoutes.get('/page-views', async (c) => {
+  const userId = c.get('userId');
   const views = await getPageViews(userId);
   return c.json(views);
 });
-
