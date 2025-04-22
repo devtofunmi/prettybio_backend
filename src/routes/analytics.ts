@@ -1,23 +1,9 @@
 import { Hono } from 'hono';
 import { getLinkAnalytics, getSocialLinkAnalytics, getPageViews } from '../controllers/analytics.js';
 import { verifyToken } from '../utils/jwt.js';
-import { cors } from 'hono/cors';
 
 export const analyticsRoutes = new Hono<{ Variables: { userId: string } }>();
 
-// Apply CORS middleware globally before your route handlers
-analyticsRoutes.use(
-  cors({
-    origin: (origin) => {
-      const allowedOrigins = [
-        'http://localhost:3000', // Your local dev URL
-        'https://prettybioo.up.railway.app', // Your deployed URL
-      ];
-      return allowedOrigins.includes(origin ?? '') ? origin : '';
-    },
-    credentials: true,
-  })
-);
 
 // Authorization middleware to check for a valid token
 analyticsRoutes.use(async (c, next) => {
