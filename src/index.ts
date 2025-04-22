@@ -18,34 +18,19 @@ const app = new Hono()
 //   origin: '*' 
 // }));
 
-// app.use(
-//   cors({
-//     origin: (origin) => {
-//       const allowedOrigins = [
-//         'http://localhost:3000',
-//         'https://prettybioo.up.railway.app',
-//       ]
-//       return allowedOrigins.includes(origin ?? '') ? origin : ''
-//     },
-//     credentials: true
-//   })
-// )
-
-const allowedOrigins = [
-  'http://localhost:3000',
-  'https://prettybioo.up.railway.app',
-]
-
 app.use(
-  '*',
   cors({
     origin: (origin) => {
-      if (!origin) return ''
-      return allowedOrigins.includes(origin) ? origin : ''
+      const allowedOrigins = [
+        'http://localhost:3000',
+        'https://prettybioo.up.railway.app',
+      ]
+      return allowedOrigins.includes(origin ?? '') ? origin : ''
     },
-    credentials: true,
+    credentials: true
   })
 )
+
 
 
 app.get('/', (c) => {
