@@ -25,7 +25,6 @@ app.use(
         'http://localhost:3000',
         'https://prettybioo.up.railway.app',
         'https://prettybio.netlify.app',
-        'https://prettybio.vercel.app',
       ]
       return allowedOrigins.includes(origin ?? '') ? origin : ''
     },
