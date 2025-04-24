@@ -1,5 +1,5 @@
 import { Hono } from 'hono';
-import { getLinkAnalytics, getSocialLinkAnalytics } from '../controllers/analytics.js';
+import { getLinkAnalytics, getPageViews, getSocialLinkAnalytics} from '../controllers/analytics.js';
 import { verifyToken } from '../utils/jwt.js';
 import { PrismaClient } from '@prisma/client';
 export const analyticsRoutes = new Hono<{ Variables: { userId: string } }>();
@@ -36,4 +36,11 @@ analyticsRoutes.get('/social-links', async (c) => {
   const socialLinks = await getSocialLinkAnalytics(userId);
   return c.json(socialLinks);
 });
+
+analyticsRoutes.get('/page-views', async (c) => {
+  const userId = c.get('userId');
+  const views = await getPageViews(userId);
+  return c.json(views);
+});
+
 
