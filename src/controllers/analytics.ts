@@ -41,22 +41,22 @@ export const getSocialLinkAnalytics = async (userId: string): Promise<SocialStat
   });
 };
 
-export const getPageViews = async (userId: string): Promise<PageView[]> => {
-  const pageViews = await prisma.pageView.findMany({
-    where: { userId },
-    select: {
-      date: true,
-      views: true,
-    },
-    orderBy: { date: 'desc' },
-    take: 5, // Limit to the last 5 days
-  });
+// export const getPageViews = async (userId: string): Promise<PageView[]> => {
+//   const pageViews = await prisma.pageView.findMany({
+//     where: { userId },
+//     select: {
+//       date: true,
+//       views: true,
+//     },
+//     orderBy: { date: 'desc' },
+//     take: 5, // Limit to the last 5 days
+//   });
 
-  return pageViews.map((view) => ({
-    date: view.date.toISOString(),
-    views: view.views,
-  }));
-};
+//   return pageViews.map((view) => ({
+//     date: view.date.toISOString(),
+//     views: view.views,
+//   }));
+// };
 
 export const incrementLinkClick = async (linkId: string) => {
   return await prisma.link.update({
