@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { getAccount, updateAccount } from "../controllers/account.js";
+import { getAccount, updateAccount, deleteAccount } from "../controllers/account.js";
 import { authMiddleware } from "../middleware/authmiddleware.js";
 
 export const accountRoutes = new Hono();
@@ -7,5 +7,7 @@ export const accountRoutes = new Hono();
 // The routes are now consistent with "/account" path
 accountRoutes.get("/", authMiddleware, getAccount);  // GET /account
 accountRoutes.put("/", authMiddleware, updateAccount);  // PUT /account
+accountRoutes.delete("/", authMiddleware, deleteAccount);  // DELETE /account
+
 
 
