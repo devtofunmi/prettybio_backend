@@ -10,6 +10,7 @@ import { analyticsRoutes } from './routes/analytics.js'
 import { preferencesRoutes } from './routes/userpreference.js' 
 import { serve } from '@hono/node-server'
 import userRoutes from './routes/user.js'
+import { publicAnalyticsRoutes } from './routes/public-analytics.js'
 
 const app = new Hono()
 
@@ -42,7 +43,8 @@ app.route("/auth", authRoutes);
 app.route("/account", accountRoutes);
 app.route("/", linkRoutes);
 app.route("/", socialRoutes);
-app.route('/analytics', analyticsRoutes);
+app.route('/analytics', publicAnalyticsRoutes); // Anonymous routes
+app.route('/analytics/admin', analyticsRoutes); // Auth-protected routes
 app.route('/preferences', preferencesRoutes);
 app.route("/", userRoutes);
 
