@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
 import { getLinkAnalytics, getSocialLinkAnalytics, addPageView } from '../controllers/analytics.js';
 import { verifyToken } from '../utils/jwt.js';
-import { PrismaClient } from '@prisma/client/extension';
+import { PrismaClient } from '@prisma/client';
 export const analyticsRoutes = new Hono<{ Variables: { userId: string } }>();
 const prisma = new PrismaClient();
 
