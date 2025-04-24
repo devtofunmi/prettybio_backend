@@ -65,3 +65,25 @@ export const updateAccount = async (c: Context) => {
   }
 };
 
+export const deleteAccount = async (c: Context) => {
+  const userId = c.get("userId");
+
+  try {
+    // Delete related data (manually)
+    await prisma.pageView.deleteMany({ where: { userId } });
+    await prisma.link.deleteMany({ where: { userId } });
+    await prisma.socialLink.deleteMany({ where: { userId } });
+
+    // Finally delete the user
+    await prisma.user.delete({
+      where: { id: userId },
+    });
+    
+    return c.json({ message: "Account and all related data deleted successfully" });
+  } catch (error) {
+    console.error("Account deletion error:", error);
+    return c.json({ error: "Failed to delete account" }, 500);
+  }
+};
+
+
